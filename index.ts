@@ -20,7 +20,7 @@ switch (process.env.NODE_ENV) {
 
 const PORT = process.env.PORT || 5000;
 const app: Application = express();
-
+app.use(express.json());
 setSwagger(app);
 setup(app);
 app.use(errors());
