@@ -8,13 +8,18 @@ const swaggerOptions = {
             title: "Manage Student",
             version: "1.0.0",
         },
-        basePath: "api/v1",
+        basePath: "/api",
         schemes: ["http", "https"],
         tags: [
             {
-                name: "Fetch Student",
+                name: "FetchInsertStudent",
                 description:
                     "get all the details of student one or more student",
+            },
+            {
+                name: "FetchInsertSubjects",
+                description:
+                    "Add subjects fetch subjects data",
             },
         ],
         securityDefinitions: {
@@ -25,7 +30,7 @@ const swaggerOptions = {
             },
         },
     },
-    apis: [],
+    apis: ["./src/routes/subject.ts"],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
