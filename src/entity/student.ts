@@ -5,9 +5,9 @@ import {
     ManyToMany,
     JoinTable,
 } from "typeorm";
-import { Subject } from "./subject";
 import { Min, Max } from "class-validator";
 import { Status } from "../utils/constants";
+import { Subject } from "./subject";
 
 @Entity("student")
 export class Student {
@@ -19,6 +19,9 @@ export class Student {
 
     @Column({ default: null })
     last_name: string;
+
+    @Column({nullable: false, unique: true})
+    mobile_number: string;
 
     @Column({ type: "timestamp" })
     dob: Date;
@@ -49,17 +52,7 @@ export class Student {
     @Column({ type: "boolean" })
     is_active: boolean;
 
-    @ManyToMany(() => Subject)
-    @JoinTable({
-        name: "student_subject",
-        joinColumn: {
-            name: "student_id",
-            referencedColumnName: "id",
-        },
-        inverseJoinColumn: {
-            name: "subject_id",
-            referencedColumnName: "id",
-        },
-    })
+    @ManyToMany(()=> Subject)
+    @JoinTable()
     subjects: Subject[];
 }
