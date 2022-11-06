@@ -4,7 +4,6 @@ import APIResponse from "../utils/apiResponse";
 import httpStatus from "http-status";
 import { AppDataSource } from "../..";
 import { Subject } from "../entity/subject";
-import {v4 as uuidv4} from "uuid";
 
 export const AddSubjects = {
     validator: celebrate({
@@ -25,7 +24,7 @@ export const AddSubjects = {
                         subject: subj,
                     })
                     .getOne();
-                const currSubject: any = {id: uuidv4(), subject : subj}
+                const currSubject: any = {subject : subj}
                 if (!newDbSubject) subjectToInsert.push(currSubject);
             })
         );

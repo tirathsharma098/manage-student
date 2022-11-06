@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { AppDataSource } from "../..";
 import { Student } from "../entity/student";
 import { Subject } from "../entity/subject";
-import { v4 as uuidv4 } from "uuid";
 import { Status } from "../utils/constants";
 import httpStatus from "http-status";
 import APIResponse from "../utils/apiResponse";
@@ -13,19 +12,31 @@ export const AddStudent = {
         body: Joi.object().keys({
             first_name: Joi.string().required(),
             last_name: Joi.string(),
+            mobile_number: Joi.string()
+                .pattern(/^\d+$/)
+                .min(10)
+                .max(18)
+                .required(),
             dob: Joi.date().required(),
             age: Joi.number().required(),
-            standard: Joi.string().required().min(1).max(30),
-            skills: Joi.string().required(),
+            standard: Joi.number().required().min(1).max(30),
+            skills: Joi.array()
+                .items(Joi.string().max(100).required())
+                .required(),
             intro: Joi.string(),
             enrolment_from: Joi.date().required(),
             enrolment_to: Joi.date()
+                .required()
                 .ruleset.greater(Joi.ref("enrolment_from"))
                 .rule({ message: "enrolment from must be before enrolment to" })
                 .required(),
-            status: Joi.string().valid(...Object.values(Status)),
-            is_active: Joi.boolean(),
-            subjects: Joi.string(),
+            status: Joi.string()
+                .valid(...Object.values(Status))
+                .required(),
+            is_active: Joi.boolean().required(),
+            subjects: Joi.array()
+                .items(Joi.string().max(500).required())
+                .required(),
         }),
     }),
     controller: async (req: Request, res: Response) => {
@@ -36,6 +47,7 @@ export const AddStudent = {
             const {
                 first_name,
                 last_name,
+                mobile_number,
                 dob,
                 age,
                 standard,
@@ -47,39 +59,55 @@ export const AddStudent = {
                 is_active,
                 subjects,
             } = req.body;
+            // checking if student already exists
+            const isStudentExist = await studentRepo
+                .createQueryBuilder()
+                .where("mobile_number LIKE :mobileNumber", {
+                    mobileNumber: mobile_number,
+                })
+                .getOne();
+            if (isStudentExist) {
+                console.log(">> STUDENT EXISTS ALREADY: ", isStudentExist);
+                return res
+                    .status(httpStatus.BAD_REQUEST)
+                    .json(
+                        new APIResponse(
+                            {},
+                            "Student Already exists with same mobile",
+                            false
+                        )
+                    );
+            }
+
             let newStudent: Student = new Student();
-            newStudent.id = uuidv4();
             newStudent.first_name = first_name;
             newStudent.last_name = last_name;
+            newStudent.mobile_number = mobile_number;
             newStudent.dob = new Date(dob);
             newStudent.age = age;
             newStudent.standard = standard;
-            newStudent.skills = skills;
+            newStudent.skills = JSON.stringify(skills);
             newStudent.intro = intro;
             newStudent.enrolment_from = new Date(enrolment_from);
             newStudent.enrolment_to = new Date(enrolment_to);
-            newStudent.status = Object.values(Status).includes(status)
-                ? Status.LIVE
-                : Status.SUSPENDED;
-            newStudent.is_active =
-                is_active.toLowerCase() === "true" ? true : false;
+            newStudent.status = status;
+            newStudent.is_active = is_active;
 
             // Validating Subjects and than adding it into new student
-            let allSubjects = JSON.parse(subjects);
+            // let allSubjects = subjects;
             const foundSubject: Subject[] = [];
             await Promise.all(
-                allSubjects.map(async (subj: string) => {
+                subjects.map(async (subjectID: string) => {
                     const newDbSubject = await subjectRepo.findOne({
-                        where: { subject: subj },
+                        where: { id: subjectID },
                     });
                     if (newDbSubject) foundSubject.push(newDbSubject);
                 })
             );
-            newStudent.subjects = foundSubject;
-
+            newStudent.subjects = [...foundSubject];
             console.log(
                 ">> ALL SUBJECTS : ",
-                allSubjects,
+                subjects,
                 ">> New Student : ",
                 newStudent
             );
@@ -98,6 +126,7 @@ export const AddStudent = {
             }
             throw new Error("Adding Student Failed");
         } catch (error) {
+            console.log(">> ERROR OCCURED WHILE SAVING STUDENT DATA: ", error);
             return res
                 .status(httpStatus.BAD_REQUEST)
                 .json(new APIResponse({}, "Student data not added", false));
