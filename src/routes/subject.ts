@@ -38,15 +38,12 @@ router.post(
  *      parameters:
  *      - in: params
  *        name: params
- *        required: false  
+ *        required: false
  *      responses:
  *          200:
  *              description: success
  *              content: {}
  */
-router.get(
-    "/",
-    subject.GetSubject.controller
-)
+router.get("/", subject.GetSubject.controller);
 
 export default router;

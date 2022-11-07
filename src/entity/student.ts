@@ -20,7 +20,7 @@ export class Student {
     @Column({ default: null })
     last_name: string;
 
-    @Column({nullable: false, unique: true})
+    @Column({ nullable: false, unique: true })
     mobile_number: string;
 
     @Column({ type: "timestamp" })
@@ -52,7 +52,7 @@ export class Student {
     @Column({ type: "boolean" })
     is_active: boolean;
 
-    @ManyToMany(()=> Subject)
+    @ManyToMany(() => Subject)
     @JoinTable()
     subjects: Subject[];
 }
