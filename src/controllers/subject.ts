@@ -12,11 +12,10 @@ export const GetSubject = {
             const allSubjects = await subjectRepo.find({
                 select: {
                     id: true,
-                    subject: true
-                }
+                    subject: true,
+                },
             });
-            if(!allSubjects){
-
+            if (!allSubjects) {
             }
             return res
                 .status(httpStatus.OK)
