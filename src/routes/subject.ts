@@ -28,4 +28,25 @@ router.post(
     subject.AddSubjects.validator,
     subject.AddSubjects.controller
 );
+
+/**
+ * @swagger
+ * /subject:
+ *  get:
+ *      tags: [FetchInsertSubjects]
+ *      description: Get all Subjects at once
+ *      parameters:
+ *      - in: params
+ *        name: params
+ *        required: false  
+ *      responses:
+ *          200:
+ *              description: success
+ *              content: {}
+ */
+router.get(
+    "/",
+    subject.GetSubject.controller
+)
+
 export default router;

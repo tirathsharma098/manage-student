@@ -7,6 +7,49 @@ import httpStatus from "http-status";
 import APIResponse from "../utils/apiResponse";
 import { celebrate, Joi } from "celebrate";
 
+export const GetAllStudent = {
+    validator: celebrate({
+        body: Joi.object().keys({
+            skip: Joi.number().min(0).required(),
+            take: Joi.number().min(1).max(100).required()
+        })
+    }),
+    controller: async (req: Request, res: Response) => {
+        try {
+            const { skip, take } = req.body;
+            console.log(">> GET STUDENT REQ BODY: ", req.body);
+            const studentRepo = AppDataSource.getRepository(Student);
+            const allStudents = await studentRepo.find({
+                order: {
+                    first_name: "ASC",
+                },
+                skip: skip,
+                take: take,
+            });
+            return res
+                .status(httpStatus.OK)
+                .json(
+                    new APIResponse(
+                        allStudents,
+                        "Students got Successfully",
+                        true
+                    )
+                );
+        } catch (err) {
+            console.log(">> ERROR OCCURED WHILE Getting STUDENTS: ", err);
+            return res
+                .status(httpStatus.BAD_REQUEST)
+                .json(
+                    new APIResponse(
+                        {},
+                        "Error Occured while getting STUDENTS",
+                        false
+                    )
+                );
+        }
+    },
+};
+
 export const AddStudent = {
     validator: celebrate({
         body: Joi.object().keys({
@@ -94,7 +137,6 @@ export const AddStudent = {
             newStudent.is_active = is_active;
 
             // Validating Subjects and than adding it into new student
-            // let allSubjects = subjects;
             const foundSubject: Subject[] = [];
             await Promise.all(
                 subjects.map(async (subjectID: string) => {
@@ -104,7 +146,7 @@ export const AddStudent = {
                     if (newDbSubject) foundSubject.push(newDbSubject);
                 })
             );
-            newStudent.subjects = [...foundSubject];
+            newStudent.subjects = foundSubject;
             console.log(
                 ">> ALL SUBJECTS : ",
                 subjects,
