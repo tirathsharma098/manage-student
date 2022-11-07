@@ -1,10 +1,40 @@
 import express from "express";
 const router = express.Router();
-import * as student from '../controllers/student';
+import * as student from "../controllers/student";
 
 /**
  * @swagger
- * /student/add
+ * /student:
+ *  post:
+ *      tags: [FetchInsertStudent]
+ *      description: Get Multiple Subjects at once
+ *      parameters:
+ *      - in: body
+ *        name: body
+ *        required: true
+ *        schema:
+ *          type: object
+ *          properties:
+ *              skip:
+ *                  type: number
+ *                  example: 0
+ *              take:
+ *                  type: number
+ *                  example: 1
+ *      responses:
+ *          200:
+ *              description: success
+ *              content: {}
+ */
+router.post(
+    "/",
+    student.GetAllStudent.validator,
+    student.GetAllStudent.controller
+);
+
+/**
+ * @swagger
+ * /student/add:
  *  post:
  *      tags: [FetchInsertStudent]
  *      description: Add Student
@@ -53,12 +83,16 @@ import * as student from '../controllers/student';
  *                  example: true
  *              subjects:
  *                  type: array
- *                  example: ["math", "hindi"]
+ *                  example: ["uuid", "uuid"]
  *      responses:
  *          200:
  *              description: success
  *              content: {}
  */
-router.post("/add", student.AddStudent.validator, student.AddStudent.controller);
+router.post(
+    "/add",
+    student.AddStudent.validator,
+    student.AddStudent.controller
+);
 
 export default router;

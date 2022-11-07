@@ -14,7 +14,7 @@ const swaggerOptions = {
             {
                 name: "FetchInsertStudent",
                 description:
-                    "get all the details of student one or more student",
+                    "Add Student or Get all the details of student one or more student",
             },
             {
                 name: "FetchInsertSubjects",
@@ -30,7 +30,7 @@ const swaggerOptions = {
             },
         },
     },
-    apis: ["./src/routes/subject.ts"],
+    apis: ["./src/routes/subject.ts", "./src/routes/student.ts"],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
