@@ -7,7 +7,7 @@ import * as student from "../controllers/student";
  * /student:
  *  post:
  *      tags: [FetchInsertStudent]
- *      description: Get Multiple Subjects at once
+ *      description: Get Multiple Students at once
  *      parameters:
  *      - in: body
  *        name: body
@@ -21,6 +21,12 @@ import * as student from "../controllers/student";
  *              take:
  *                  type: number
  *                  example: 1
+ *      - in: header
+ *        name: Authorization
+ *        required: true
+ *        schema:
+ *          type: string
+ *          example: hj3kj4k3k4-43433kn4kn-33nk43
  *      responses:
  *          200:
  *              description: success
@@ -84,6 +90,12 @@ router.post(
  *              subjects:
  *                  type: array
  *                  example: ["uuid", "uuid"]
+ *      - in: header
+ *        name: Authorization
+ *        required: true
+ *        schema:
+ *          type: string
+ *          example: hj3kj4k3k4-43433kn4kn-33nk43
  *      responses:
  *          200:
  *              description: success
@@ -150,6 +162,12 @@ router.post(
  *              subjects:
  *                  type: array
  *                  example: ["subject_uuid", "subject_uuid"]
+ *      - in: header
+ *        name: Authorization
+ *        required: true
+ *        schema:
+ *          type: string
+ *          example: hj3kj4k3k4-43433kn4kn-33nk43
  *      responses:
  *          200:
  *              description: success

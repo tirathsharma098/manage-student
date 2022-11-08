@@ -2,8 +2,8 @@ import { celebrate, Joi } from "celebrate";
 import { Request, Response } from "express";
 import APIResponse from "../utils/apiResponse";
 import httpStatus from "http-status";
-import { AppDataSource } from "../..";
 import { Subject } from "../entity/subject";
+import AppDataSource from "../database/dbRunner";
 
 export const GetSubject = {
     controller: async (req: Request, res: Response) => {

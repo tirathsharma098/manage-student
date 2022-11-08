@@ -1,11 +1,11 @@
-import { Request, response, Response } from "express";
-import { AppDataSource } from "../..";
+import { Request, Response } from "express";
 import { Student } from "../entity/student";
 import { Subject } from "../entity/subject";
 import { Status } from "../utils/constants";
 import httpStatus from "http-status";
 import APIResponse from "../utils/apiResponse";
 import { celebrate, Joi } from "celebrate";
+import AppDataSource from "../database/dbRunner";
 
 const validateStudentObject = {
     first_name: Joi.string().required(),

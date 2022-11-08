@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express from "express";
 const router = express.Router();
 import * as subject from "../controllers/subject";
 
@@ -18,6 +18,12 @@ import * as subject from "../controllers/subject";
  *              subjects:
  *                  type: array
  *                  example: ["math", "hindi"]
+ *      - in: header
+ *        name: Authorization
+ *        required: true
+ *        schema:
+ *          type: string
+ *          example: hj3kj4k3k4-43433kn4kn-33nk43
  *      responses:
  *          200:
  *              description: success
@@ -39,6 +45,12 @@ router.post(
  *      - in: params
  *        name: params
  *        required: false
+ *      - in: header
+ *        name: Authorization
+ *        required: true
+ *        schema:
+ *          type: string
+ *          example: hj3kj4k3k4-43433kn4kn-33nk43
  *      responses:
  *          200:
  *              description: success

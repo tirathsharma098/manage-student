@@ -18,8 +18,11 @@ const swaggerOptions = {
             },
             {
                 name: "FetchInsertSubjects",
-                description:
-                    "Add subjects fetch subjects data",
+                description: "Add subjects fetch subjects data",
+            },
+            {
+                name: "AdminSpace",
+                description: "Do Admin things here, manage students and all",
             },
         ],
         securityDefinitions: {
@@ -30,10 +33,14 @@ const swaggerOptions = {
             },
         },
     },
-    apis: ["./src/routes/subject.ts", "./src/routes/student.ts"],
+    apis: [
+        "./src/routes/subject.ts",
+        "./src/routes/student.ts",
+        "./src/routes/admin.ts",
+    ],
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 export const setSwagger = (app: Application) => {
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
-  };
+    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+};
